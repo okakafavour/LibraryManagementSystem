@@ -21,6 +21,6 @@ public interface LiberianService {
     void removeBookById(String bookId);
     void removeBookByTitle(String title);
     List<BorrowingRecord> viewAllBorrowingHistory();
-    List<Book> viewBorrowedBooks();
+    List<Book> viewAllBooks();
 
 }

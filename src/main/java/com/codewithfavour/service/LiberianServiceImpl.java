@@ -97,24 +97,26 @@ public class LiberianServiceImpl implements LiberianService {
     @Override
     public List<BorrowingRecord> viewAllBorrowingHistory() {
         List<BorrowingRecord> records = new ArrayList<>();
+
         List<LibraryMember> members = libraryMemberRepository.findAll();
 
         for (LibraryMember member : members) {
-            List<String> history = member.getBorrowingHistory();
-            List<String> returned = member.getReturnedBookIds() != null ? member.getReturnedBookIds() : new ArrayList<>();
+            List<String> borrowedBookIds = member.getBorrowingHistory();
+            if (borrowedBookIds == null) continue;
 
-            for (String bookId : history) {
-                Optional<Book> bookOptional = bookRepository.findById(bookId);
-                if (bookOptional.isPresent()) {
-                    Book book = bookOptional.get();
+            List<String> returnedBookIds = member.getReturnedBookIds();
+            List<String> returnedIds = returnedBookIds != null ? returnedBookIds : new ArrayList<>();
+
+
+            for (String bookId : borrowedBookIds) {
+                bookRepository.findById(bookId).ifPresent(book -> {
 
                     BorrowingRecord record = new BorrowingRecord();
                     record.setLibraryMemberName(member.getFullName());
                     record.setBookTitle(book.getTitle());
-                    record.setStatus(returned.contains(bookId) ? "Returned" : "Borrowed");
-
+                    record.setStatus(returnedIds.contains(bookId) ? "Returned" : "Borrowed");
                     records.add(record);
-                }
+                });
             }
         }
 
@@ -122,8 +124,7 @@ public class LiberianServiceImpl implements LiberianService {
     }
 
     @Override
-    public List<Book> viewBorrowedBooks() {
-        return bookRepository.findByAvailableFalse();
-
+    public List<Book> viewAllBooks() {
+        return bookRepository.findAll();
     }
 }

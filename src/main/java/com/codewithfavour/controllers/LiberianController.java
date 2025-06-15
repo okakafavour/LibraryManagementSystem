@@ -1,6 +1,7 @@
 package com.codewithfavour.controllers;
 
 import com.codewithfavour.data.model.Book;
+import com.codewithfavour.data.model.BorrowingRecord;
 import com.codewithfavour.data.repository.BookRepository;
 import com.codewithfavour.dto.request.LoginLiberianRequest;
 import com.codewithfavour.dto.request.RegisterLiberianRequest;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/liberian")
@@ -43,7 +46,7 @@ public class LiberianController {
     }
 
     @PostMapping("/books/checkout/{bookId}")
-    public ResponseEntity<String> checkoutBook(@PathVariable("bookId") String bookId) {
+    public ResponseEntity<String> checkoutBook(@PathVariable String bookId) {
         try {
             String message = liberianService.checkOutBook(bookId);
             return ResponseEntity.ok(message);
@@ -55,7 +58,7 @@ public class LiberianController {
 
 
     @PostMapping("/books/checkin/{bookId}")
-    public ResponseEntity<String> checkInBook (@PathVariable("bookId") String bookId){
+    public ResponseEntity<String> checkInBook (@PathVariable String bookId){
         try {
             String message = liberianService.checkInBook(bookId);
             return ResponseEntity.ok(message);
@@ -74,7 +77,7 @@ public class LiberianController {
 
 
     @DeleteMapping("/books/{bookId}")
-    public ResponseEntity<String> removeById(@PathVariable("bookId") String bookId) {
+    public ResponseEntity<String> removeById(@PathVariable String bookId) {
         try {
             liberianService.removeBookById(bookId);
             return ResponseEntity.ok("Book removed successfully");
@@ -85,13 +88,27 @@ public class LiberianController {
 
 
     @DeleteMapping("/book/remove/title/{title}")
-    public ResponseEntity<String> removeByTitle(@PathVariable("title") String title){
+    public ResponseEntity<String> removeByTitle(@PathVariable String title){
         try {
             liberianService.removeBookByTitle(title);
             return ResponseEntity.ok("Book removed successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid book :" + e.getMessage());
         }
+    }
+
+    @GetMapping("/borrowing-history")
+    public ResponseEntity<List<BorrowingRecord>> ViewAllBorrowingHistory(){
+        List<BorrowingRecord> record = liberianService.viewAllBorrowingHistory();
+        return new ResponseEntity<>(record, HttpStatus.OK);
+    }
+
+    @GetMapping("/books")
+    public ResponseEntity<Book> viewAllBooks(){
+        List<Book> allBooks = liberianService.viewAllBooks();
+        return !allBooks.isEmpty()
+                ? new ResponseEntity<>(allBooks.get(0), HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
 

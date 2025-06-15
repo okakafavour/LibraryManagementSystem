@@ -158,4 +158,38 @@ class LiberianServiceImplTest {
         assertEquals(0, bookRepository.findAll().size());
 
     }
+
+    @Test
+    public void testToViewAllBorrowedBooksHisory(){
+        Book book = new Book();
+        book.setBookId("World");
+        book.setTitle("Bob's books");
+        book.setAuthor("uncle idowu");
+        book.setISBN("23-21-01");
+        book.setPublicationYear("2035");
+        book.setAvailable(false);
+        bookRepository.save(book);
+
+
+        Book book2 = new Book();
+        book2.setBookId("2");
+        book2.setTitle("Models");
+        book2.setAuthor("Clinton");
+        book2.setISBN("23-24561-01");
+        book2.setPublicationYear("2025");
+        book2.setAvailable(false);
+        bookRepository.save(book2);
+
+        Book book3 = new Book();
+        book3.setBookId("3");
+        book3.setTitle("Weather");
+        book3.setAuthor("Ade");
+        book3.setISBN("23345-21-01");
+        book3.setPublicationYear("2015");
+        book3.setAvailable(false);
+        bookRepository.save(book3);
+
+        assertEquals(3, bookRepository.count());
+    }
+
 }

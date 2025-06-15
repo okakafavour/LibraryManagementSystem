@@ -95,20 +95,19 @@ public class LibraryMemberServiceImpl implements LibraryMemberService {
 
         return "returned book successfully";
     }
-
     @Override
     public List<String> viewBorrowedBookHistory(String libraryMemberId) {
-        LibraryMember libraryMember = libraryMemberRepository.findById(libraryMemberId)
-                .orElseThrow(() -> new ResourceNotFoundException("Library member with ID " + libraryMemberId + " not found"));
+        LibraryMember member = libraryMemberRepository.findById(libraryMemberId)
+                .orElseThrow(() -> new ResourceNotFoundException("Library member not found"));
 
-        List<String> history = new ArrayList<>();
-        for (String bookId : libraryMember.getBorrowingHistory()) {
-            Optional<Book> bookOptional = bookRepository.findById(bookId);
-            String bookTitle = bookOptional.map(Book::getTitle)
-                    .orElse("Unknown Book (ID: " + bookId + ")");
-            history.add(bookTitle);
-        }
-        return history;
+        List<String> borrowed = member.getBorrowingHistory();
+        if (borrowed == null) return List.of();
+
+        return borrowed.stream()
+                .map(id -> bookRepository.findById(id)
+                        .map(Book::getTitle)
+                        .orElse("Unknown Book (ID: " + id + ")"))
+                .toList();
     }
 
     @Override
