@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 public interface LiberianService {
-    RegisterLiberianResponse register(RegisterLiberianRequest registerLiberianRequest);
     LoginLiberianResponse login (LoginLiberianRequest loginLiberianRequest);
     String checkOutBook(String bookId);
     String checkInBook(String bookId);

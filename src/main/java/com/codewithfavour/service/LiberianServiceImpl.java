@@ -15,6 +15,7 @@ import com.codewithfavour.dto.response.RegisterLiberianResponse;
 import com.codewithfavour.exception.BookNotFoundException;
 import com.codewithfavour.exception.InvalidBookIdException;
 import com.codewithfavour.util.LiberianMapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +43,17 @@ public class LiberianServiceImpl implements LiberianService {
     @Autowired
     private LiberianRepository liberianRepository;
 
-
-    @Override
-    public RegisterLiberianResponse register(RegisterLiberianRequest registerLiberianRequest) {
-        Liberian liberian = mapToLiberianRequest(registerLiberianRequest);
-        Liberian savedLiberian = liberianRepository.save(liberian);
-        return mapToLiberianResponse(savedLiberian);
+    @PostConstruct
+    public void initLibrarian() {
+        String defaultEmail = "admin@library.com";
+        if (liberianRepository.findByEmail(defaultEmail) == null) {
+            Liberian defaultLiberian = new Liberian();
+            defaultLiberian.setFullName("Admin Librarian");
+            defaultLiberian.setEmail(defaultEmail);
+            defaultLiberian.setPassword("admin123");
+            defaultLiberian.setPhoneNumber("08000000000");
+            liberianRepository.save(defaultLiberian);
+        }
     }
 
     @Override

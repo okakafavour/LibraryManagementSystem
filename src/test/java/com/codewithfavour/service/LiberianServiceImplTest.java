@@ -1,12 +1,12 @@
 package com.codewithfavour.service;
 
+
 import com.codewithfavour.data.repository.BookRepository;
 import com.codewithfavour.data.repository.LiberianRepository;
 import com.codewithfavour.dto.request.BookRequest;
 import com.codewithfavour.dto.request.LoginLiberianRequest;
 import com.codewithfavour.dto.request.RegisterLiberianRequest;
 import com.codewithfavour.dto.response.LoginLiberianResponse;
-import com.codewithfavour.dto.response.RegisterLiberianResponse;
 import com.codewithfavour.data.model.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,33 +40,15 @@ class LiberianServiceImplTest {
         bookRepository.deleteAll();
     }
 
-    @Test
-    public void testToRegisterAsALiberian() {
-        RegisterLiberianRequest registerLiberianRequest = new RegisterLiberianRequest();
-        registerLiberianRequest.setFullName("Fave");
-        registerLiberianRequest.setEmail("fave@codewithfavour.com");
-        registerLiberianRequest.setPassword("123456");
-        registerLiberianRequest.setPhoneNumber("01234567890");
 
-        RegisterLiberianResponse registerResponse = liberianService.register(registerLiberianRequest);
-        assertEquals("Registered successfully", registerResponse.getMessage());
-    }
 
 
     @Test
-    public void toRegisterAsALiberian_AndLogin() {
-        RegisterLiberianRequest registerLiberianRequest = new RegisterLiberianRequest();
-        registerLiberianRequest.setFullName("Fave");
-        registerLiberianRequest.setEmail("fave@codewithfavour.com");
-        registerLiberianRequest.setPassword("123456");
-        registerLiberianRequest.setPhoneNumber("01234567890");
-
-        RegisterLiberianResponse registerResponse = liberianService.register(registerLiberianRequest);
-        assertEquals("Registered successfully", registerResponse.getMessage());
+    public void toLoginAsALibarian() {
 
         LoginLiberianRequest loginLiberianRequest = new LoginLiberianRequest();
-        loginLiberianRequest.setEmail("fave@codewithfavour.com");
-        loginLiberianRequest.setPassword("123456");
+        loginLiberianRequest.setEmail("admin@library.com");
+        loginLiberianRequest.setPassword("admin123");
 
         LoginLiberianResponse loginLiberianResponse = liberianService.login(loginLiberianRequest);
         assertEquals("Login successfully", loginLiberianResponse.getMessage());

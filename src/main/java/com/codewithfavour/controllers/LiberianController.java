@@ -30,11 +30,6 @@ public class LiberianController {
     private BookRepository bookRepository;
 
 
-    @PostMapping("/register")
-    public ResponseEntity<RegisterLiberianResponse> register(@RequestBody RegisterLiberianRequest request) {
-        return ResponseEntity.ok(liberianService.register(request));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginLiberianRequest request) {
         try {
