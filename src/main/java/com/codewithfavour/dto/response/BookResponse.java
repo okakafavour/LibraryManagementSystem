@@ -11,5 +11,9 @@ public class BookResponse {
     private String author;
     private String ISBN;
     private String publicationYear;
-    private boolean Available;
+    private boolean available;
+
+    public String getStatus() {
+        return available ? "Available" : "Borrowed";
+    }
 }

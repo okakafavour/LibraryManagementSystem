@@ -50,19 +50,26 @@ public class LibraryMemberServiceImpl implements LibraryMemberService {
     }
 
     @Override
-    public String borrowBook(String libraryMemberId, String bookId) {
+    public String borrowBook(String libraryMemberId, String title) {
         Optional<LibraryMember> libraryMemberOptional = libraryMemberRepository.findById(libraryMemberId);
-        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        Optional<Book> bookOptional = bookRepository.findByTitleIgnoreCase(title.trim());
 
-        if (libraryMemberOptional.isEmpty()) return "library member not found";
-        if (bookOptional.isEmpty()) return "book not found";
+        if (libraryMemberOptional.isEmpty()) return "Library member not found";
+        if (bookOptional.isEmpty()) return "Book not found";
 
         LibraryMember libraryMember = libraryMemberOptional.get();
         Book book = bookOptional.get();
 
+        if ("borrowed".equalsIgnoreCase(book.getStatus())) {
+            return "Book is already borrowed";
+        }
+
+        book.setStatus("borrowed");
+
+
         book.setAvailable(false);
-        libraryMember.getBorrowedBookIds().add(bookId);
-        libraryMember.getBorrowingHistory().add(bookId);
+        libraryMember.getBorrowedBookIds().add(book.getBookId());
+        libraryMember.getBorrowingHistory().add(book.getBookId());
 
         bookRepository.save(book);
         libraryMemberRepository.save(libraryMember);
@@ -73,8 +80,9 @@ public class LibraryMemberServiceImpl implements LibraryMemberService {
         record.setStatus("BORROWED");
         borrowingRecordRepository.save(record);
 
-        return "borrowed book successfully";
+        return "Borrowed book successfully";
     }
+
 
     @Override
     public String returnBook(String libraryMember, String bookId) {
@@ -88,6 +96,7 @@ public class LibraryMemberServiceImpl implements LibraryMemberService {
         Book book = optionalBook.get();
 
         book.setAvailable(true);
+        book.setStatus("available");
         libraryMember1.getBorrowedBookIds().remove(bookId);
 
         bookRepository.save(book);

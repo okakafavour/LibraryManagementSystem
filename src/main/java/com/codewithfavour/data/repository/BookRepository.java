@@ -12,5 +12,6 @@ public interface BookRepository extends MongoRepository<Book, String> {
     @Override
     Optional<Book> findById(String bookId);
     List<Book> findByTitle(String title);
+    Optional<Book> findByTitleIgnoreCase(String title);
 
 }

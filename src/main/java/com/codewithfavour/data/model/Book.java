@@ -14,6 +14,7 @@ public class Book {
     private String ISBN;
     private String publicationYear;
     private boolean available;
+    private String status;
 
 
 }

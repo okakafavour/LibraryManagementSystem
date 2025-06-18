@@ -9,9 +9,7 @@ import com.codewithfavour.data.repository.LiberianRepository;
 import com.codewithfavour.data.repository.LibraryMemberRepository;
 import com.codewithfavour.dto.request.BookRequest;
 import com.codewithfavour.dto.request.LoginLiberianRequest;
-import com.codewithfavour.dto.request.RegisterLiberianRequest;
 import com.codewithfavour.dto.response.LoginLiberianResponse;
-import com.codewithfavour.dto.response.RegisterLiberianResponse;
 import com.codewithfavour.exception.BookNotFoundException;
 import com.codewithfavour.exception.InvalidBookIdException;
 import com.codewithfavour.util.LiberianMapper;
@@ -23,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.codewithfavour.util.LiberianMapper.mapToLiberianRequest;
-import static com.codewithfavour.util.LiberianMapper.mapToLiberianResponse;
 
 
 @Service

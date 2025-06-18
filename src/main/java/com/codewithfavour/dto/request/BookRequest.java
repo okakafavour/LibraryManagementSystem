@@ -12,5 +12,6 @@ public class BookRequest {
     private String ISBN;
     private String publicationYear;
     private boolean Available;
+    private String coverageImage;
 
 }

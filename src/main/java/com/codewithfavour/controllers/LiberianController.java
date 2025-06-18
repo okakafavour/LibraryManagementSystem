@@ -4,9 +4,7 @@ import com.codewithfavour.data.model.Book;
 import com.codewithfavour.data.model.BorrowingRecord;
 import com.codewithfavour.data.repository.BookRepository;
 import com.codewithfavour.dto.request.LoginLiberianRequest;
-import com.codewithfavour.dto.request.RegisterLiberianRequest;
 import com.codewithfavour.dto.response.LoginLiberianResponse;
-import com.codewithfavour.dto.response.RegisterLiberianResponse;
 import com.codewithfavour.service.BookService;
 import com.codewithfavour.service.LiberianService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/liberian")
 public class LiberianController {
@@ -63,8 +61,8 @@ public class LiberianController {
         }
     }
 
-
-    @PostMapping("/books")
+    @CrossOrigin(origins = "http://localhost:63343")
+    @PostMapping("/add-books")
     public ResponseEntity<?> addBook(@RequestBody Book book) {
         Book savedBook = bookRepository.save(book);
         return ResponseEntity.ok(savedBook);
@@ -98,12 +96,14 @@ public class LiberianController {
         return new ResponseEntity<>(record, HttpStatus.OK);
     }
 
-    @GetMapping("/books")
-    public ResponseEntity<Book> viewAllBooks(){
+
+    @GetMapping("/view-books")
+    public ResponseEntity<List<Book>> viewAllBooks() {
         List<Book> allBooks = liberianService.viewAllBooks();
-        return !allBooks.isEmpty()
-                ? new ResponseEntity<>(allBooks.get(0), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return allBooks.isEmpty()
+                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(allBooks, HttpStatus.OK);
     }
+
 }
 

@@ -19,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/libraryMember")
-//@CrossOrigin(origins = "http://localhost:63342/")
 @CrossOrigin(origins = "*")
 @Tag(name = "Library member", description = "operations related to library member")
 public class LibraryMemberController {
@@ -34,21 +33,32 @@ public class LibraryMemberController {
     }
 
     @Operation(summary = "login in the app")
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginLibraryMemberResponse> loginLibraryMember(@RequestBody LoginLibraryMemberRequest request) {
         return ResponseEntity.ok(libraryMemberService.login(request));
     }
+    @PostMapping("/{libraryMemberId}/borrow/title/{title}")
+    public ResponseEntity<String> borrowBook(@PathVariable("libraryMemberId") String libraryMemberId, @PathVariable("title") String title) {
+        String response = libraryMemberService.borrowBook(libraryMemberId, title);
 
-    @Operation(summary = "borrow a book" )
-    @PostMapping("/{LibraryMemberId}/borrow/{bookId}")
-    public String borrowBook(@PathVariable String LibraryMemberId, @PathVariable String bookId) {
-        return libraryMemberService.borrowBook(LibraryMemberId, bookId);
+        if (response.equalsIgnoreCase("Library member not found")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } else if (response.equalsIgnoreCase("Book not found")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } else if (response.equalsIgnoreCase("Book is already borrowed")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        } else if (response.equalsIgnoreCase("Borrowed book successfully")) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred");
+        }
     }
 
 
-    @PostMapping ("/{LibraryMemberId}/return/{bookId}")
-    public String returnBook(@PathVariable String LibraryMemberId, @PathVariable String bookId) {
-        return libraryMemberService.returnBook(LibraryMemberId, bookId);
+
+    @PostMapping("/{LibraryMemberId}/return/title/{title}")
+    public String returnBook(@PathVariable String LibraryMemberId, @PathVariable String title) {
+        return libraryMemberService.returnBook(LibraryMemberId, title);
     }
     @GetMapping("/borrow-history/{libraryMemberId}")
     public List<String> viewBorrowedBookHistory(@PathVariable String libraryMemberId) {

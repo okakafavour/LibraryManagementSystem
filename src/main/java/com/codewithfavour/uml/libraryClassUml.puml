@@ -1,0 +1,204 @@
+@startuml
+
+
+top to bottom direction
+skinparam linetype ortho
+
+class Book {
+  - author: String
+  - bookId: String
+  - ISBN: String
+  - publicationYear: String
+  - title: String
+  - available: boolean
+}
+class BookMapper
+class BookNotFoundException
+interface BookRepository << interface >>
+class BookRequest {
+  - author: String
+  - ISBN: String
+  - publisher: String
+  - Available: boolean
+  - title: String
+  - publicationYear: String
+}
+class BookResponse {
+  - author: String
+  - Available: boolean
+  - bookId: String
+  - title: String
+  - publicationYear: String
+  - ISBN: String
+}
+interface BookService << interface >>
+class BookServiceImpl {
+  - bookRepository: BookRepository
+}
+class BookServiceImplTest {
+  ~ bookRequest: BookRequest
+  ~ bookService: BookServiceImpl
+  ~ bookRepository: BookRepository
+}
+class BorrowingRecord {
+  - libraryMemberName: String
+  - status: String
+  - bookTitle: String
+}
+interface BorrowingRecordRepository << interface >>
+interface BorrowingRecordService << interface >>
+class BorrowingRecordServiceImpl {
+  - borrowingRecordRepository: BorrowingRecordRepository
+}
+class GlobalExceptionHandler
+class InvalidAddressException
+class InvalidBookIdException
+class InvalidEmailException
+class InvalidFullNameException
+class InvalidPasswordException
+class InvalidPhoneNumberException
+class Liberian {
+  - email: String
+  - phoneNumber: String
+  - id: String
+  - fullName: String
+  - password: String
+}
+class LiberianController {
+  - bookRepository: BookRepository
+  - liberianService: LiberianService
+  - bookService: BookService
+}
+class LiberianMapper {
+  - liberianRepository: LiberianRepository
+}
+interface LiberianRepository << interface >>
+interface LiberianService << interface >>
+class LiberianServiceImpl {
+  - bookRepository: BookRepository
+  - bookService: BookServiceImpl
+  ~ liberianMapper: LiberianMapper
+  - libraryMemberRepository: LibraryMemberRepository
+  - liberianRepository: LiberianRepository
+}
+class LiberianServiceImplTest {
+  ~ registerLiberianRequest: RegisterLiberianRequest
+  - bookRepository: BookRepository
+  ~ liberianService: LiberianServiceImpl
+  - liberianRepository: LiberianRepository
+  - bookService: BookService
+}
+class LibraryMember {
+  - userId: String
+  - borrowingHistory: List<String>
+  - returnedBookIds: List<String>
+  - phoneNumber: String
+  - borrowedBookIds: List<String>
+  - fullName: String
+  - password: String
+  - email: String
+}
+class LibraryMemberController {
+  - libraryMemberService: LibraryMemberService
+}
+class LibraryMemberMapper {
+  - libraryMemberRepository: LibraryMemberRepository
+}
+interface LibraryMemberRepository << interface >>
+interface LibraryMemberService << interface >>
+class LibraryMemberServiceImpl {
+  - borrowingRecordRepository: BorrowingRecordRepository
+  ~ libraryMemberMapper: LibraryMemberMapper
+  - bookRepository: BookRepository
+  - libraryMemberRepository: LibraryMemberRepository
+}
+class LibraryMemberServiceImplTest {
+  ~ loginLibraryMemberRequest: LoginLibraryMemberRequest
+  ~ userService: LibraryMemberServiceImpl
+  - bookRepository: BookRepository
+  ~ registerLibraryMemberRequest: RegisterLibraryMemberRequest
+  ~ libraryMemberRepository: LibraryMemberRepository
+  - libraryMemberService: LibraryMemberService
+}
+class LoginLiberianRequest {
+  - message: String
+  - password: String
+  - email: String
+}
+class LoginLiberianResponse {
+  - message: String
+}
+class LoginLibraryMemberRequest {
+  - email: String
+  - message: String
+  - password: String
+}
+class LoginLibraryMemberResponse {
+  - message: String
+}
+class Main
+class RegisterLiberianRequest {
+  - phoneNumber: String
+  - fullName: String
+  - email: String
+  - password: String
+}
+class RegisterLiberianResponse {
+  - liberianId: String
+  - email: String
+  - phoneNumber: String
+  - message: String
+  - fullName: String
+}
+class RegisterLibraryMemberRequest {
+  - fullName: String
+  - email: String
+  - phoneNumber: String
+  - password: String
+}
+class RegisterLibraryMemberResponse {
+  - message: String
+  - fullName: String
+  - phoneNumber: String
+  - userId: String
+  - email: String
+}
+class ResourceNotFoundException
+class Validation
+
+BookServiceImpl               "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+BookServiceImpl                -[#008200,dashed]-^  BookService
+BookServiceImplTest           "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+BookServiceImplTest           "1" *-[#595959,plain]-> "bookRequest\n1" BookRequest
+BookServiceImplTest           "1" *-[#595959,plain]-> "bookService\n1" BookServiceImpl
+BorrowingRecordServiceImpl    "1" *-[#595959,plain]-> "borrowingRecordRepository\n1" BorrowingRecordRepository
+BorrowingRecordServiceImpl     -[#008200,dashed]-^  BorrowingRecordService
+LiberianController            "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+LiberianController            "1" *-[#595959,plain]-> "bookService\n1" BookService
+LiberianController            "1" *-[#595959,plain]-> "liberianService\n1" LiberianService
+LiberianMapper                "1" *-[#595959,plain]-> "liberianRepository\n1" LiberianRepository
+LiberianServiceImpl           "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+LiberianServiceImpl           "1" *-[#595959,plain]-> "bookService\n1" BookServiceImpl
+LiberianServiceImpl           "1" *-[#595959,plain]-> "liberianMapper\n1" LiberianMapper
+LiberianServiceImpl           "1" *-[#595959,plain]-> "liberianRepository\n1" LiberianRepository
+LiberianServiceImpl            -[#008200,dashed]-^  LiberianService
+LiberianServiceImpl           "1" *-[#595959,plain]-> "libraryMemberRepository\n1" LibraryMemberRepository
+LiberianServiceImplTest       "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+LiberianServiceImplTest       "1" *-[#595959,plain]-> "bookService\n1" BookService
+LiberianServiceImplTest       "1" *-[#595959,plain]-> "liberianRepository\n1" LiberianRepository
+LiberianServiceImplTest       "1" *-[#595959,plain]-> "liberianService\n1" LiberianServiceImpl
+LiberianServiceImplTest       "1" *-[#595959,plain]-> "registerLiberianRequest\n1" RegisterLiberianRequest
+LibraryMemberController       "1" *-[#595959,plain]-> "libraryMemberService\n1" LibraryMemberService
+LibraryMemberMapper           "1" *-[#595959,plain]-> "libraryMemberRepository\n1" LibraryMemberRepository
+LibraryMemberServiceImpl      "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+LibraryMemberServiceImpl      "1" *-[#595959,plain]-> "borrowingRecordRepository\n1" BorrowingRecordRepository
+LibraryMemberServiceImpl      "1" *-[#595959,plain]-> "libraryMemberMapper\n1" LibraryMemberMapper
+LibraryMemberServiceImpl      "1" *-[#595959,plain]-> "libraryMemberRepository\n1" LibraryMemberRepository
+LibraryMemberServiceImpl       -[#008200,dashed]-^  LibraryMemberService
+LibraryMemberServiceImplTest  "1" *-[#595959,plain]-> "bookRepository\n1" BookRepository
+LibraryMemberServiceImplTest  "1" *-[#595959,plain]-> "libraryMemberRepository\n1" LibraryMemberRepository
+LibraryMemberServiceImplTest  "1" *-[#595959,plain]-> "libraryMemberService\n1" LibraryMemberService
+LibraryMemberServiceImplTest  "1" *-[#595959,plain]-> "userService\n1" LibraryMemberServiceImpl
+LibraryMemberServiceImplTest  "1" *-[#595959,plain]-> "loginLibraryMemberRequest\n1" LoginLibraryMemberRequest
+LibraryMemberServiceImplTest  "1" *-[#595959,plain]-> "registerLibraryMemberRequest\n1" RegisterLibraryMemberRequest
+@enduml

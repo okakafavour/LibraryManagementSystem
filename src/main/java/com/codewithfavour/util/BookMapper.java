@@ -11,7 +11,9 @@ public class BookMapper {
         book.setTitle(request.getTitle());
         book.setISBN(request.getISBN());
         book.setAuthor(request.getAuthor());
-        book.setAvailable(request.isAvailable());
+        book.setAvailable(true);
+        book.setStatus("available");
+
         book.setPublicationYear(request.getPublicationYear());
         return book;
     }
@@ -23,6 +25,7 @@ public class BookMapper {
        bookResponse.setISBN(book.getISBN());
        bookResponse.setAuthor(book.getAuthor());
        bookResponse.setAvailable(book.isAvailable());
+       book.setStatus(book.getStatus());
        bookResponse.setPublicationYear(book.getPublicationYear());
        return bookResponse;
     }
