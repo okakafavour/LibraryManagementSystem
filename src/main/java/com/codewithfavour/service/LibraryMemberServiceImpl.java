@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.codewithfavour.util.LibraryMemberMapper.*;
 
@@ -125,5 +126,9 @@ public class LibraryMemberServiceImpl implements LibraryMemberService {
     }
 
 
-
+    public List<Book> searchBooksByTitle(String title) {
+        return bookRepository.findAll().stream()
+                .filter(book -> book.getTitle().contains(title))
+                .collect(Collectors.toList());
+    }
 }

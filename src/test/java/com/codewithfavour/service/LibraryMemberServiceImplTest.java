@@ -111,8 +111,8 @@ class LibraryMemberServiceImplTest {
         book.setAvailable(true);
        bookRepository.save(book);
 
-       String result = libraryMemberService.borrowBook(member.getUserId(), book.getBookId());
-       assertEquals("borrowed book successfully", result);
+       String result = libraryMemberService.borrowBook(member.getUserId(), book.getTitle());
+       assertEquals("Borrowed book successfully", result);
 
         Book updatedBook = bookRepository.findById(book.getBookId()).get();
        assertFalse(updatedBook.isAvailable());

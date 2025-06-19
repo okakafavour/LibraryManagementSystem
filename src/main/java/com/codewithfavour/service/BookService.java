@@ -1,5 +1,6 @@
 package com.codewithfavour.service;
 
+import com.codewithfavour.data.model.Book;
 import com.codewithfavour.dto.request.BookRequest;
 import com.codewithfavour.dto.response.BookResponse;
 import org.springframework.stereotype.Service;
@@ -13,4 +14,5 @@ public interface BookService {
   BookResponse updateBook(String bookId, BookRequest request);
    void deleteBook(String bookId);
    List<BookResponse> getAllBooks();
+   List<Book> searchBooksByTitle(String title);
 }

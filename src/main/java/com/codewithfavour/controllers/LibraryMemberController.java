@@ -5,11 +5,13 @@ import com.codewithfavour.dto.request.LoginLibraryMemberRequest;
 import com.codewithfavour.dto.request.RegisterLibraryMemberRequest;
 import com.codewithfavour.dto.response.LoginLibraryMemberResponse;
 import com.codewithfavour.dto.response.RegisterLibraryMemberResponse;
+import com.codewithfavour.service.BookService;
 import com.codewithfavour.service.LibraryMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class LibraryMemberController {
     @Autowired
     private LibraryMemberService libraryMemberService;
 
+    @Autowired
+    private BookService bookService;
+
     @Operation(summary = "register a new library member")
     @PostMapping("/register")
     public ResponseEntity<RegisterLibraryMemberResponse> registerLibraryMember(@RequestBody RegisterLibraryMemberRequest request) {
@@ -41,15 +46,11 @@ public class LibraryMemberController {
     public ResponseEntity<String> borrowBook(@PathVariable("libraryMemberId") String libraryMemberId, @PathVariable("title") String title) {
         String response = libraryMemberService.borrowBook(libraryMemberId, title);
 
-        if (response.equalsIgnoreCase("Library member not found")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } else if (response.equalsIgnoreCase("Book not found")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } else if (response.equalsIgnoreCase("Book is already borrowed")) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-        } else if (response.equalsIgnoreCase("Borrowed book successfully")) {
-            return ResponseEntity.ok(response);
-        } else {
+        if (response.equalsIgnoreCase("Library member not found")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+         else if (response.equalsIgnoreCase("Book not found")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+         else if (response.equalsIgnoreCase("Book is already borrowed")) return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+         else if (response.equalsIgnoreCase("Borrowed book successfully")) return ResponseEntity.ok(response);
+         else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred");
         }
     }
@@ -71,6 +72,11 @@ public class LibraryMemberController {
         return !books.isEmpty()
                 ? new ResponseEntity<>(books.get(0), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/search")
+    public List<Book> searchBooks(@RequestParam("title") String title) {
+        return bookService.searchBooksByTitle(title);
     }
 
 }

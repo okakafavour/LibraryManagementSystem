@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -61,5 +63,14 @@ public class BookServiceImpl implements BookService {
             responses.add(bookResponse);
         }
         return responses;
+    }
+
+
+    @Override
+    public List<Book> searchBooksByTitle(String title) {
+        return bookRepository.findAll().stream()
+                .filter(book -> book.getTitle().contains(title))
+                .collect(Collectors.toList());
+
     }
 }
